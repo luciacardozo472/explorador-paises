@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Countries } from '../services/countries';
 
 @Component({
@@ -13,7 +13,10 @@ export class Tab1Page implements OnInit {
   cargando = true;
   error = false;
 
-  constructor(private countriesService: Countries) {}
+  constructor(
+    private countriesService: Countries,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.cargarPaises();
@@ -29,10 +32,12 @@ export class Tab1Page implements OnInit {
         );
         this.paisesFiltrados = this.paises;
         this.cargando = false;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.error = true;
         this.cargando = false;
+        this.cdr.detectChanges();
       },
     });
   }

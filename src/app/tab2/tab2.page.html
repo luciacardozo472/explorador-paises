@@ -1,17 +1,46 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      Tab 2
-    </ion-title>
+    <ion-title>Regiones</ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-segment
+      [scrollable]="true"
+      [value]="regionActual"
+      (ionChange)="cambiarRegion($event)"
+    >
+      <ion-segment-button *ngFor="let r of regiones" [value]="r.valor">
+        <ion-label>{{ r.nombre }}</ion-label>
+      </ion-segment-button>
+    </ion-segment>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 2</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div *ngIf="cargando" class="centro">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Cargando países...</p>
+  </div>
 
-  <app-explore-container name="Tab 2 page"></app-explore-container>
+  <div *ngIf="error" class="centro">
+    <ion-icon name="cloud-offline-outline" class="icono-error"></ion-icon>
+    <p>No se pudieron cargar los países.</p>
+    <ion-button (click)="cargarRegion()">Reintentar</ion-button>
+  </div>
+
+  <ion-list *ngIf="!cargando && !error">
+    <ion-list-header>
+      <ion-label>{{ paises.length }} países</ion-label>
+    </ion-list-header>
+
+    <ion-item *ngFor="let pais of paises">
+      <ion-avatar slot="start">
+        <img [src]="pais.bandera" [alt]="pais.name.common" />
+      </ion-avatar>
+      <ion-label>
+        <h2>{{ pais.name.common }}</h2>
+        <p>{{ pais.capital?.[0] || 'Sin capital' }}</p>
+      </ion-label>
+      <ion-badge slot="end" color="medium">{{ pais.cca3 }}</ion-badge>
+    </ion-item>
+  </ion-list>
 </ion-content>
